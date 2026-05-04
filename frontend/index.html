@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Real Estate Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar for Inputs and Recommendations -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <h1>Real Estate AI</h1>
+                <p>Investment Analyzer</p>
+            </header>
+
+            <div class="card form-card">
+                <h2>Property Details</h2>
+                <form id="dashboard-form">
+                    <div class="input-group">
+                        <label for="location">Location</label>
+                        <select id="location" required>
+                            <option value="" disabled selected>Loading locations...</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="area">Area (sq ft)</label>
+                        <input type="number" id="area" required min="100" placeholder="e.g. 1500">
+                    </div>
+                    <div class="input-group">
+                        <label for="bhk">BHK</label>
+                        <input type="number" id="bhk" required min="1" max="10" placeholder="e.g. 3">
+                    </div>
+                    <div class="input-group">
+                        <label for="price">Property Price (Lakhs)</label>
+                        <input type="number" id="price" required min="1" step="0.01" placeholder="e.g. 80.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="rent">Expected Monthly Rent (₹)</label>
+                        <input type="number" id="rent" required min="1000" placeholder="e.g. 25000">
+                    </div>
+                    <button type="submit" id="submit-btn">
+                        <span class="btn-text">Analyze & Recommend</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="error-message" class="card error-card hidden fade-in">
+                <p id="error-text">An error occurred.</p>
+            </div>
+
+            <div id="rec-results-container" class="card hidden fade-in" style="margin-top: 1.5rem;">
+                <h2>Smart Recommendations</h2>
+                <p class="subtitle">Based on your criteria.</p>
+                <div id="rec-cards-wrapper" class="cards-grid">
+                    <!-- Recommendation cards will be injected here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Metric Cards -->
+            <div class="top-metrics">
+                <div class="metric-card">
+                    <div class="metric-value blue-text" id="res-price">₹0 L</div>
+                    <div class="metric-label">PREDICTED PRICE</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value purple-text" id="res-roi">0%</div>
+                    <div class="metric-label">PROJECTED ROI</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value green-text" id="res-yield">0%</div>
+                    <div class="metric-label">RENTAL YIELD</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value yellow-text" id="res-risk">N/A</div>
+                    <div class="metric-label">RISK LEVEL</div>
+                </div>
+            </div>
+
+            <!-- Risk Indicator (Linear Progress) -->
+            <div class="risk-indicator-section">
+                <div class="risk-header">
+                    <span>Investment Score Indicator</span>
+                    <span id="score-text-display">0/100</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="score-progress-bar"></div>
+                </div>
+                <div class="risk-labels">
+                    <span>High Risk (Score < 40)</span>
+                    <span>Low Risk (Score > 70)</span>
+                </div>
+                <div class="risk-insight">
+                    <p id="risk-insight-text">Awaiting analysis. Enter property details to see AI insights.</p>
+                </div>
+            </div>
+
+            <!-- Section 1: Breakdown -->
+            <div class="chart-section">
+                <h3>Price probability breakdown</h3>
+                <div class="canvas-container horizontal-bar-container">
+                    <canvas id="probabilityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Section 2: Model Metrics & Evaluation -->
+            <div class="evaluation-header">
+                <h2>Model metrics & evaluation</h2>
+                <p>Comprehensive evaluation using feature importance, investment distribution, and property comparisons.</p>
+            </div>
+            
+            <div class="metrics-grid-2x2">
+                <div class="chart-card">
+                    <h4>FEATURE IMPORTANCE (PER CLASS)</h4>
+                    <div class="canvas-container">
+                        <canvas id="featureChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h4>PRICE TREND & CONFIDENCE</h4>
+                    <div class="canvas-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h4>MARKET COMPARISON</h4>
+                    <div class="canvas-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h4>INVESTMENT DISTRIBUTION (ROI VS RISK)</h4>
+                    <div class="canvas-container donut-container">
+                        <canvas id="donutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
